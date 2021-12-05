@@ -1,4 +1,4 @@
-public class Dog {
+ class Dog {
     // real class
     // instance variables
     int size;
