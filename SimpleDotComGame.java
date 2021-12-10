@@ -39,7 +39,7 @@ public class SimpleDotComGame {
             numOfGuesses++;
             //// CHECK for dot com death
             //IF result is "kill"
-            if (result == "kill"){
+            if (result.equals("kill")){
                 //SET isAlive to false (which means we won't enter the loop again)
                 isAlive = false;
                 // PRINT the number of user guesses
