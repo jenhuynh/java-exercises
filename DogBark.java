@@ -17,8 +17,10 @@ public class DogBark {
         //now access the Dogs using the array references
         myDogs[0].name = "Fred";
         myDogs[1].name = "Marge";
+        myDogs[2].name = "Sally";
 
         //Hmm...what is myDogs[2] name?
+        System.out.println(myDogs.length);
         System.out.print("last dog's name is ");
         System.out.println(myDogs[2].name);
 
