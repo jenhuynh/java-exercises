@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/java-contact-manager-testing.iml" filepath="$PROJECT_DIR$/java-contact-manager-testing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/target/pom.iml" filepath="$PROJECT_DIR$/target/pom.iml" />
     </modules>
   </component>
 </project>
