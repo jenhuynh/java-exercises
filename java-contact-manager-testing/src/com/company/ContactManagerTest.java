@@ -3,21 +3,30 @@ package com.company;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 //creates only one instance of the class, instantiates the test class only once
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
-class ContactManagerTest {
+public class ContactManagerTest {
 
     //create instance contactManager variable
-    ContactManager contactManager;
+    private ContactManager contactManager;
 
     //method marked with @BeforeAll will be executed once for the entire test class, usually occurs before the instance of the test
         //mark as static or junit cannot execute this method
     @BeforeAll
-    public void setupAll() {
+    public static void setupAll() {
         System.out.println("Should Print Before All Tests");
     }
 
@@ -133,14 +142,31 @@ class ContactManagerTest {
                 .isPresent());
     }
 
+    @Test
     @DisplayName("Test Contact Creation on Developer Machine")
-    @RepeatedTest(value = 5,
-             name = "Repeating Contact Creation Test {currentRepetition} of {totalRepetitions}")
     public void shouldTestContactCreationOnDEV() {
         //property set called ENV inside the run configurations
-        Assumptions.assumeTrue("TEST".equals(System.getProperty("ENV")));
+        Assumptions.assumeTrue("DEV".equals(System.getProperty("ENV")));
         contactManager.addContact("John","Doe","0123456789");
         assertFalse(contactManager.getAllContacts().isEmpty());
         assertEquals(1, contactManager.getAllContacts().size());
+    }
+
+    @DisplayName("Repeat Contact Creation Test 5 Times")
+    @RepeatedTest(value = 5,
+            name = "Repeating Contact Creation Test {currentRepetition} of {totalRepetitions}")
+    public void shouldTestContactCreationRepeatedly() {
+        contactManager.addContact("John", "Doe", "0123456789");
+        assertFalse(contactManager.getAllContacts().isEmpty());
+        assertEquals(1, contactManager.getAllContacts().size());
+    }
+
+    @DisplayName("Repeat Contact Creation Test 5 Times")
+    @ParameterizedTest
+    @ValueSource (strings = {"0123456789", "0123456789", "0123456789"})
+    public void shouldTestContactCreationUsingValueSource(String phoneNumber) {
+         contactManager.addContact("John", "Doe", phoneNumber);
+         assertFalse(contactManager.getAllContacts().isEmpty());
+         assertEquals(1, contactManager.getAllContacts().size());
     }
 }
