@@ -1,36 +1,57 @@
 package com.company;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-public class ContactManagerTest {
+//creates only one instance of the class, instantiates the test class only once
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
+class ContactManagerTest {
+
+    //create instance contactManager variable
+    ContactManager contactManager;
+
+    //method marked with @BeforeAll will be executed once for the entire test class, usually occurs before the instance of the test
+        //mark as static or junit cannot execute this method
+    @BeforeAll
+    public void setupAll() {
+        System.out.println("Should Print Before All Tests");
+    }
+
+    //setUp method to initialize contactManager class/object as it is redundant if we keep writing for each test method
+        //Junit will create a new instance of the class for each method so each test will work with its own copy
+    @BeforeEach
+    public void setup(){
+        //create object for the contact manager class
+         contactManager = new ContactManager();
+    }
     //testing that a contact is created successfully and saved to the application
     @Test
     //@DisplayName annotation provides a custom readable name for this method/test so instead of displaying the method name, it displays the custom name
     @DisplayName("Should Create Contact")
     public void shouldCreateContact() {
-        //create object for the contact manager class
-        ContactManager contactManager = new ContactManager();
         //call addContact method and create a contact and pass it in first, last, and phone number details
         contactManager.addContact("John", "Doe", "0123456789");
         //verify if the list is not empty, using assert false method so this will take a boolean parameter as input and if
         //boolean is not false, it will throw an exception and will fail the test
         //we expect this list from get all contacts methods should not be empty, use assertfalse method
-        assertFalse(contactManager.getAllContacts().isEmpty());
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
         //testing to verify if the result of getAllContacts() is not empty, the size of getAllContacts() is exactly 1
-        assertEquals(1, contactManager.getAllContacts().size());
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+        Assertions.assertTrue(contactManager.getAllContacts().stream()
+                .filter(contact -> contact.getFirstName().equals("John") &&
+                        contact.getLastName().equals("Doe") &&
+                        contact.getPhoneNumber().equals("0123456789"))
+                .findAny()
+                .isPresent());
     }
 
     //tests whether the Contact Creation fails when we enter the First Name as Null
     @Test
     @DisplayName("Should Not Create Contact When First Name is Null")
     public void shouldThrowRuntimeExceptionWhenFirstNameIsNull() {
-        ContactManager contactManager = new ContactManager();
         //asserting that the addContact() method throws a RuntimeException
         //assert the Exceptions using the assertThrow() method from the Assertions class
         //assertThrow() method takes the Exception Type as the first parameter and the Executable which throws the Exception as the second parameter
@@ -43,7 +64,6 @@ public class ContactManagerTest {
     @Test
     @DisplayName("Should Not Create Contact When Last Name is Null")
     public void shouldThrowRuntimeExceptionWhenLastNameIsNull() {
-        ContactManager contactManager = new ContactManager();
         Assertions.assertThrows(RuntimeException.class, () -> {
            contactManager.addContact("John", null, "0123456789");
         });
@@ -53,9 +73,18 @@ public class ContactManagerTest {
     @Test
     @DisplayName("Should Not Create Contact When Phone Number is Null")
     public void shouldThrowRuntimeExceptionWhenPhoneNumberIsNull() {
-        ContactManager contactManager = new ContactManager();
         Assertions.assertThrows(RuntimeException.class, () -> {
             contactManager.addContact("John", "Doe", null);
         });
+    }
+
+    @AfterEach
+    public void tearDown() {
+        System.out.println("Should Execute After Each Test");
+    }
+
+    @AfterAll
+    public void tearDownAll() {
+        System.out.println("Should be executed at the end of the Test");
     }
 }
