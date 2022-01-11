@@ -169,4 +169,37 @@ public class ContactManagerTest {
          assertFalse(contactManager.getAllContacts().isEmpty());
          assertEquals(1, contactManager.getAllContacts().size());
     }
+
+    @DisplayName("Method Source Case - Phone Number should match the required Format")
+    @ParameterizedTest
+    //Junit will dynamically read the fdata returned from the phoneNumberList method and will inject them into tests
+    @MethodSource("phoneNumberList")
+    public void shouldTestPhoneNumberFormatUsingMethodSource(String phoneNumber) {
+        contactManager.addContact("John", "Doe", phoneNumber);
+        assertFalse(contactManager.getAllContacts().isEmpty());
+        assertEquals(1, contactManager.getAllContacts().size());
+    }
+
+    private static List<String> phoneNumberList() {
+        return Arrays.asList("0123456789", "0123456798", "0123456897");
+    }
+
+    @DisplayName("CSV Source Case - Phone Number should match the required Format")
+    @ParameterizedTest
+    //Junit will dynamically read the fdata returned from the phoneNumberList method and will inject them into tests
+    @CsvSource({"0123456789", "0123456798", "0123456897"})
+    public void shouldTestPhoneNumberFormatUsingCSVSource(String phoneNumber) {
+        contactManager.addContact("John", "Doe", phoneNumber);
+        assertFalse(contactManager.getAllContacts().isEmpty());
+        assertEquals(1, contactManager.getAllContacts().size());
+    }
+
+    @Nested
+    class RepeatedNestedTest {
+
+    }
+
+    class ParameterizedNestedTest {
+
+    }
 }
