@@ -1,7 +1,8 @@
 package com.company;
 
 import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -27,6 +28,7 @@ class ContactManagerTest {
         //create object for the contact manager class
          contactManager = new ContactManager();
     }
+
     //testing that a contact is created successfully and saved to the application
     @Test
     //@DisplayName annotation provides a custom readable name for this method/test so instead of displaying the method name, it displays the custom name
@@ -86,5 +88,59 @@ class ContactManagerTest {
     @AfterAll
     public void tearDownAll() {
         System.out.println("Should be executed at the end of the Test");
+    }
+
+    //testing that a contact is created successfully and saved to the application only on MAC OS
+    @Test
+    //@DisplayName annotation provides a custom readable name for this method/test so instead of displaying the method name, it displays the custom name
+    @DisplayName("Should Create Contact Only on MAC OS")
+    @EnabledOnOs(value = OS.MAC, disabledReason = "Should Run only on MAC OS")
+    public void shouldCreateContactOnlyOnMAC() {
+        //call addContact method and create a contact and pass it in first, last, and phone number details
+        contactManager.addContact("John", "Doe", "0123456789");
+        //verify if the list is not empty, using assert false method so this will take a boolean parameter as input and if
+        //boolean is not false, it will throw an exception and will fail the test
+        //we expect this list from get all contacts methods should not be empty, use assertfalse method
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        //testing to verify if the result of getAllContacts() is not empty, the size of getAllContacts() is exactly 1
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+        Assertions.assertTrue(contactManager.getAllContacts().stream()
+                .filter(contact -> contact.getFirstName().equals("John") &&
+                        contact.getLastName().equals("Doe") &&
+                        contact.getPhoneNumber().equals("0123456789"))
+                .findAny()
+                .isPresent());
+    }
+    //testing that a contact is created successfully and saved to the application only on Windows OS
+    @Test
+    //@DisplayName annotation provides a custom readable name for this method/test so instead of displaying the method name, it displays the custom name
+    @DisplayName("Should Create Contact Only on Windows OS")
+    @EnabledOnOs(value = OS.WINDOWS, disabledReason = "Should Run Only on Windows OS")
+    public void shouldCreateContactOnlyOnWindows() {
+        //call addContact method and create a contact and pass it in first, last, and phone number details
+        contactManager.addContact("John", "Doe", "0123456789");
+        //verify if the list is not empty, using assert false method so this will take a boolean parameter as input and if
+        //boolean is not false, it will throw an exception and will fail the test
+        //we expect this list from get all contacts methods should not be empty, use assertfalse method
+        Assertions.assertFalse(contactManager.getAllContacts().isEmpty());
+        //testing to verify if the result of getAllContacts() is not empty, the size of getAllContacts() is exactly 1
+        Assertions.assertEquals(1, contactManager.getAllContacts().size());
+        Assertions.assertTrue(contactManager.getAllContacts().stream()
+                .filter(contact -> contact.getFirstName().equals("John") &&
+                        contact.getLastName().equals("Doe") &&
+                        contact.getPhoneNumber().equals("0123456789"))
+                .findAny()
+                .isPresent());
+    }
+
+    @DisplayName("Test Contact Creation on Developer Machine")
+    @RepeatedTest(value = 5,
+             name = "Repeating Contact Creation Test {currentRepetition} of {totalRepetitions}")
+    public void shouldTestContactCreationOnDEV() {
+        //property set called ENV inside the run configurations
+        Assumptions.assumeTrue("TEST".equals(System.getProperty("ENV")));
+        contactManager.addContact("John","Doe","0123456789");
+        assertFalse(contactManager.getAllContacts().isEmpty());
+        assertEquals(1, contactManager.getAllContacts().size());
     }
 }
