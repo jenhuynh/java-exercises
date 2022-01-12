@@ -16,20 +16,21 @@ public class People {
         //filtering out everyone that has a hundred or more billions of dollars
 //        List<Person> hundredClub = new ArrayList<>();
 
-        //Stream version with filter, people is the list we want to filter by looping through each person and filter on person who
+        //Chaining Streams version with filter, people is the list we want to filter by looping through each person and filter on person who
         // is greater than or equal to 100 bil
-//        List<Person> hundredClub = people.stream()
-//                .filter(person -> person.billions >= 100)
-//                //return a new list
-//                .collect(Collectors.toList());
+        List<Person> hundredSortedClub = people.stream()
+                .filter(person -> person.billions >= 100)
+                .sorted(Comparator.comparing(person -> person.name))
+                //return a new list
+                .collect(Collectors.toList());
 
         //Stream with Sort all the names alphabetically
-            List<Person> sortedList = people.stream()
-                    //use Comparator when sorting on an object
-                    .sorted(Comparator.comparing(person -> person.name))
-                            .collect(Collectors.toList());
-            //print everything in the sorted list
-            sortedList.forEach(person -> System.out.println(person.name));
+//            List<Person> sortedList = people.stream()
+//                    //use Comparator when sorting on an object
+//                    .sorted(Comparator.comparing(person -> person.name))
+//                            .collect(Collectors.toList());
+//            //print everything in the sorted list
+//            sortedList.forEach(person -> System.out.println(person.name));
 
         //Manual way: loop through eat person in that list
 //        for(Person p : people){
@@ -40,7 +41,7 @@ public class People {
 
 
         //print out people in the hundredClub list
-//        hundredClub.forEach(person -> System.out.println(person.name));
+        hundredSortedClub.forEach(person -> System.out.println(person.name));
     }
 }
 
